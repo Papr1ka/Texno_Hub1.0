@@ -12,3 +12,4 @@ vk_api
 bs4
 requests
 pymongo
+dnspython
