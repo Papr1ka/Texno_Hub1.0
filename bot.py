@@ -121,6 +121,9 @@ async def help(ctx, category = None):
 		embed.add_field(name = "Шар предсказаний",
 						value = "`ball [ваш вопрос]`",
 						inline = False)
+		embed.add_field(name = "Поддержать сервер",
+						value = "`donate`",
+						inline = False)
 	elif category == "user":
 		embed.add_field(name = "Статус",
 						value = "`status`",
