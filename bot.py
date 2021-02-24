@@ -11,9 +11,10 @@ import time
 import datetime
 from random import randint
 import Errors
+import os
 
 
-Token = "NjI3NTc1OTc0NDQ3Mjg0MjI0.XY-prA.NHs0hcRZ-pOfXmiuOf71VT6dbYs"
+Token = str(os.environ.get("TOKEN"))
 prefixes = ('?', '+', '=')
 
 Bot = commands.Bot(command_prefix = ['?', '+', '='], intents = discord.Intents.all())
