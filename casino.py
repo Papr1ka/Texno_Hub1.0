@@ -496,7 +496,7 @@ class Casino(Database, commands.Cog):
                 embed.description = "***Типы ставок и выйгрыши***"
                 embed.add_field(name = "`red` или `black`", value = "ставка на цвет, выйгрыш 1 к 1")
                 embed.add_field(name = "`odd` или `even`", value = "ставка на чётность, выйгрыш 1 к 1")
-                embed.add_field(name = "`duzin [число](1 - 3)`", value = "ставка на дюжину, выйгрыш 2 к 1")
+                embed.add_field(name = "`dozen [число](1 - 3)`", value = "ставка на дюжину, выйгрыш 2 к 1")
                 embed.add_field(name = "`line [число](1 - 3)`", value = "ставка на колонку, выйгрыш 2 к 1")
                 embed.add_field(name = "`[число](0 - 36)`", value = "ставка на число, выйгрыш 35 к 1")
                 embed.set_image(url = "http://12bets.ru/attachments/Image/evropeyskaya-ruletka.JPG?template=generic")

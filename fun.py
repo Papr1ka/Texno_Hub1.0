@@ -244,7 +244,7 @@ class fun(commands.Cog):
 			embed = discord.Embed(
 				color = discord.Color.green(),
 				title = f"Погода в {keys[int(arg)]}")
-			embed.add_field(name="Темпиратура", value=f"{temp} °C")
+			embed.add_field(name="Температура", value=f"{temp} °C")
 			embed.add_field(name="По ощущению", value=f"{temp_feel} °C")
 			embed.add_field(name="Ветер", value=f"{wind} м/с")
 			embed.add_field(name="Давление", value=f"{pressure} мм рт. ст.")
