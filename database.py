@@ -4,7 +4,7 @@ class User():
     def __init__(self, id):
         self.user_id = id
         self.exp = 0
-        self.money = 0
+        self.money = 1000
         self.voice = 0
         self.messages = 0
         self.custom_text = ""
@@ -60,10 +60,13 @@ class Database():
         self.connect(database)
     
     def connect(self, database_):
-        Cluster = MongoClient("mongodb+srv://user:o0NFJeLOdfIaDaKD@cluster0.qbwbb.mongodb.net/serverdb?retryWrites=true&w=majority")
-        database = Cluster["userstates"]
-        self.db = database[database_]
-        print("Connected to database")
+        try:
+            Cluster = MongoClient("mongodb+srv://user:o0NFJeLOdfIaDaKD@cluster0.qbwbb.mongodb.net/serverdb?retryWrites=true&w=majority")
+            database = Cluster["userstates"]
+            self.db = database[database_]
+            print("Connected to database")
+        except:
+            print("Can't connect to database")
     
     def get_user(self, user_id):
         """
