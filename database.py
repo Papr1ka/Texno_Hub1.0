@@ -60,13 +60,10 @@ class Database():
         self.connect(database)
     
     def connect(self, database_):
-        try:
-            Cluster = MongoClient("mongodb+srv://user:o0NFJeLOdfIaDaKD@cluster0.qbwbb.mongodb.net/serverdb?retryWrites=true&w=majority")
-            database = Cluster["userstates"]
-            self.db = database[database_]
-            print("Connected to database")
-        except:
-            print("Can't connect to database")
+        Cluster = MongoClient("mongodb+srv://user:o0NFJeLOdfIaDaKD@cluster0.qbwbb.mongodb.net/serverdb?retryWrites=true&w=majority")
+        database = Cluster["userstates"]
+        self.db = database[database_]
+        print("Connected to database")
     
     def get_user(self, user_id):
         """
