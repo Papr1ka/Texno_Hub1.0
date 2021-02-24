@@ -1,0 +1,13 @@
+discord.py
+asyncio
+aiohttp
+websockets
+chardet
+datetime
+PyNaCl
+emoji
+regex
+Pillow
+vk_api
+bs4
+requests
