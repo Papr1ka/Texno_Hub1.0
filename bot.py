@@ -274,7 +274,6 @@ async def on_command_error(ctx, error):
 		print(error)
 
 
-
 Bot.load_extension("voice_manager")
 Bot.load_extension("members")
 Bot.load_extension("administration")
@@ -283,5 +282,6 @@ Bot.load_extension("user_card")
 Bot.load_extension("leveling")
 Bot.load_extension("shop")
 Bot.load_extension("casino")
+Bot.load_extension("donate")
 
 Bot.run(Token)
