@@ -18,6 +18,7 @@ class Administration(commands.Cog):
             print(Exception)
     
     @commands.command(aliases = ["mut"])
+    @commands.has_permissions(administrator = True)
     async def mute(self, ctx, member : discord.Member, time : str):
 
         def parse(time):
