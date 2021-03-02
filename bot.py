@@ -286,5 +286,6 @@ Bot.load_extension("leveling")
 Bot.load_extension("shop")
 Bot.load_extension("casino")
 Bot.load_extension("donate")
+Bot.load_extension("giveaway")
 
 Bot.run(Token)
