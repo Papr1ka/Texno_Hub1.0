@@ -32,7 +32,6 @@ class Giveaway(Database, commands.Cog):
         msg = await giveaway.channel.fetch_message(giveaway.id)
         users = await msg.reactions[0].users().flatten()
         users.pop(users.index(self.Bot.user))
-        print(users)
         if len(users) > 0:
             winner = random.choice(users)
             text = f"{winner.nick if not winner.nick is None else winner.name} забрал контрабанду!"
