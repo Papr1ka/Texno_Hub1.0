@@ -34,13 +34,13 @@ class Giveaway(Database, commands.Cog):
         users.pop(users.index(self.Bot.user))
         if len(users) > 0:
             winner = random.choice(users)
-            text = f"{winner.nick if not winner.nick is None else winner.name} забрал контрабанду!"
             self.update_user(winner.id, 'inc', money = money)
+            await ctx.send(f"{winner.mention} забрал контрабанду!")
         else:
             text = "Увы, контрабанду перехватили("
         
-        embed.set_footer(text = text)
-        await giveaway.edit(embed = embed)
+            embed.set_footer(text = text)
+            await giveaway.edit(embed = embed)
 
 def setup(Bot):
     Bot.add_cog(Giveaway(Bot))
