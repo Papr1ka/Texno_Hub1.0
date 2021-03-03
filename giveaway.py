@@ -28,7 +28,7 @@ class Giveaway(Database, commands.Cog):
         await ctx.message.delete()
         giveaway = await ctx.send(embed = embed)
         await giveaway.add_reaction(str(self.emoji))
-        await asyncio.sleep(time * 1)
+        await asyncio.sleep(time * 60)
         msg = await giveaway.channel.fetch_message(giveaway.id)
         users = await msg.reactions[0].users().flatten()
         users.pop(users.index(self.Bot.user))
