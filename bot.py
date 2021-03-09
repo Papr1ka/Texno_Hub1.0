@@ -13,9 +13,10 @@ from random import randint
 import Errors
 import os
 
-
 Token = str(os.environ.get("TOKEN"))
 prefixes = ('?', '+', '=')
+min_bet = 100
+max_bet = 5000
 
 Bot = commands.Bot(command_prefix = ['?', '+', '='], intents = discord.Intents.all())
 new_year_url = "https://images-ext-2.discordapp.net/external/DUJiSi_F0zD4qC7KQ_fhitA-71QafMEy5yr9AlmqOuM/%3Fsize%3D604x453%26quality%3D96%26sign%3D3516dad15b573bc76e756800404d003a%26type%3Dalbum/https/sun9-52.userapi.com/impf/ujA6AEanaoSdjFoESy4N8lwYHSHAv6iFzXtOIw/VXmJolIY4lE.jpg"
@@ -248,7 +249,7 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, Errors.InvalidFriendError):
 		await send_message(channel, "пользователь указан неверно", timeout)
 	elif isinstance(error, Errors.InvalidBetError):
-		await send_message(channel, "невозможная ставка, минимально 50, максимум 1000", timeout)
+		await send_message(channel, f"невозможная ставка, минимально {min_bet}, максимум {max_bet}", timeout)
 	elif isinstance(error, Errors.InvalidMoneyError):
 		await send_message(channel, "невозможное количество денег", timeout)
 	elif isinstance(error, Errors.InvalidSimpleBetError):
@@ -276,7 +277,7 @@ async def on_command_error(ctx, error):
 	else:
 		print(error)
 
-
+Bot.load_extension("casino")
 Bot.load_extension("voice_manager")
 Bot.load_extension("members")
 Bot.load_extension("administration")
@@ -284,7 +285,6 @@ Bot.load_extension("fun")
 Bot.load_extension("user_card")
 Bot.load_extension("leveling")
 Bot.load_extension("shop")
-Bot.load_extension("casino")
 Bot.load_extension("donate")
 Bot.load_extension("giveaway")
 

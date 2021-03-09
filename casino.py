@@ -5,6 +5,7 @@ from database import Database
 import random
 import asyncio
 import Errors
+from bot import send_message, min_bet, max_bet
 
 slots = [1, 2, 3, 4, 5] #0.5, 0.75, 1, 1.25, 1.5 modifier
 emoji = ["","🍗", "🍌", "🥥", "🍎", "🍺"]
@@ -243,6 +244,8 @@ class Casino(Database, commands.Cog):
     def __init__(self, Bot):
         super(Casino, self).__init__('main')
         self.Bot = Bot
+        self.casino = self.get_user(777)
+        self.last_money = int(self.casino['money'])
     
     @commands.Cog.listener()
     async def on_ready(self):
@@ -268,7 +271,7 @@ class Casino(Database, commands.Cog):
         else:
             try:
                 bet = int(bet)
-                if bet < 50 or bet > 1000:
+                if bet < min_bet or bet > max_bet:
                     raise Errors.InvalidBetError
             except:
                 raise Errors.InvalidBetError
@@ -291,6 +294,7 @@ class Casino(Database, commands.Cog):
             await game.edit(embed = embed)
         embed.set_footer(text = ("Вы потеряли" if roll[0] - bet < 0 else "Вы выиграли") + " " + str(abs(roll[0] - bet)) + " $", icon_url = "https://image.flaticon.com/icons/png/512/8/8817.png")
         await game.edit(embed = embed)
+        await self.info_casino(-(roll[0] - bet))
         self.update_user(ctx.author.id, 'inc', money = int(roll[0]))
     
     async def rollTheDice(self):
@@ -303,7 +307,7 @@ class Casino(Database, commands.Cog):
         else:
             try:
                 bet = int(bet)
-                if bet < 50 or bet > 1000:
+                if bet < min_bet or bet > max_bet:
                     raise Errors.InvalidBetError
             except:
                 raise Errors.InvalidBetError
@@ -319,12 +323,13 @@ class Casino(Database, commands.Cog):
             if win[0] > win[1]:
                 description = f"{ctx.author.display_name} выйграл! {bet - bet // 20}$"
                 self.update_user(ctx.author.id, 'inc', money = (bet * 2) - bet // 20)
+                await self.info_casino(-((bet * 2) - bet // 20))
             elif win[0] == win[1]:
                 description = f"ничья"
                 self.update_user(ctx.author.id, 'inc', money = bet)
             else:
                 description = f"King Dice выйграл! {bet}$"
-                pass
+                await self.info_casino(bet)
             await asyncio.sleep(1)
             embed.set_footer(text = description)
             await dic.edit(embed = embed)
@@ -332,8 +337,10 @@ class Casino(Database, commands.Cog):
             if member.id == ctx.author.id:
                 raise Errors.InvalidFriendError
             await ctx.send(f"{member.mention}, {ctx.author.display_name} приглашает вас в сыграть в кости, ставка {bet}, напишите `claim`")
+
             def check(m):
                 return (m.content == 'claim' or m.content[1:] == 'claim') and m.channel == ctx.channel and m.author == member
+
             msg = await self.Bot.wait_for('message', check = check, timeout = 60)
             await self.pay(ctx.author.id, bet)
             await self.pay(msg.author.id, bet)
@@ -355,7 +362,7 @@ class Casino(Database, commands.Cog):
             await asyncio.sleep(2)
             embed.set_footer(text = description)
             await dic.edit(embed = embed)
-    
+
     @commands.command(aliases = ['pay'])
     async def give(self, ctx, money = None, member : discord.Member = None):
         if money is None:
@@ -417,10 +424,10 @@ class Casino(Database, commands.Cog):
         else:
             try:
                 money = int(money)
-                if money < 50 or money > 1000:
+                if money < min_bet or money > max_bet:
                     raise Errors.InvalidBetError
             except:
-                raise Errors.InvalidMoneyError
+                raise Errors.InvalidBetError
         if bet is None or not bet in (*[str(i) for i in range(37)], "red", "black", "odd", "even", "dozen", "line"):
             raise Errors.InvalidSimpleBetError
         
@@ -471,6 +478,7 @@ class Casino(Database, commands.Cog):
                 elif win in range(24, 37):
                     if co_bet == 3:
                         bigboom = money * 3
+
         elif bet == "line":
             if co_bet == int(params[win][2]):
                 bigboom = money * 3
@@ -480,8 +488,10 @@ class Casino(Database, commands.Cog):
         
         if bigboom > 0:
             text = f"Вы выйграли {bigboom - money}$ !!!"
+            await self.info_casino(bigboom - money)
         else:
             text = f"Вы проиграли {money}"
+            await self.info_casino(money)
         self.update_user(ctx.author.id, 'inc', money = bigboom)
         embed.set_footer(text = text)
         await game.edit(embed = embed)
@@ -513,11 +523,34 @@ class Casino(Database, commands.Cog):
             elif arg == "dice":
                 embed.description = "***Правила и выйгрыш***\n\nВыигрывает тот, у кого выпадет большее значение\nВыйгрыш:\n 1 к 1 если с игроком\n1 к 1 - 2.5% от выйгрыша если с дайсом"
             await ctx.send(embed = embed)
+    
+    async def info_casino(self, money):
+        self.update_user(777, 'inc', money = money) #cash
+        self.update_user(777, 'inc', voice = money) #income
+    
+    @commands.command()
+    @commands.has_permissions(administrator = True)
+    async def income(self, ctx):
+        embed = discord.Embed(
+            color = discord.Colour.magenta(),
+            title = "Прибыль казино"
+        )
+        income = int(self.get_user(777)['voice'])
+        cash = int(self.get_user(777)['money'])
+        embed.set_thumbnail(url = 'http://pm1.narvii.com/6640/7d60e26077831a9496381d56a97160506ade7d1f_00.jpg')
+        embed.add_field(name = "Доход за всё время", value = str(income))
+        embed.add_field(name = "Доход за сегодня", value = str(income - self.last_money))
+        embed.add_field(name = "Счёт", value = str(cash))
+        await ctx.send(embed = embed)
+    
+    @commands.command()
+    @commands.has_permissions(administrator = True)
+    async def cashout(self, ctx):
+        money = int(self.get_user(777)['money'])
+        self.update_user(777, 'inc', money = -money)
+        self.update_user(ctx.author.id, 'inc', money = money)
+        await send_message(ctx.channel, f"{ctx.author} Снял со счёта казино {money} $")
 
-
-
-
-            
 
 def setup(Bot):
     Bot.add_cog(Casino(Bot))
