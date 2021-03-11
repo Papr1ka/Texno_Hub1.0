@@ -11,7 +11,7 @@ class Donate(commands.Cog):
             color = discord.Colour.teal(),
             title = "Поддержать Сервер")
         embed.url = "https://www.tinkoff.ru/sl/3LSEAlOHPj5"
-        embed.description = "```markdown\n* курс 1 руб к 100 $\n* время обработки до 12ч\n* переходите по ссылке и пишите свой в поле 'как вас зовут'\nник discord в формате name#discriminator\n* ждите прибавления)```"
+        embed.description = "```markdown\n* курс 1 руб к 100 $\n* время обработки до 12ч\n* переходите по ссылке и пишите свой в поле 'сообщение...'\nник discord в формате name#discriminator\n* ждите прибавления)```"
         await ctx.send(embed = embed)
 
 def setup(Bot):
